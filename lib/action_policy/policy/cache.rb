@@ -44,10 +44,15 @@ module ActionPolicy # :nodoc:
 
       module InstanceMethods # :nodoc:
         def apply(rule)
+          @cached = nil
           return super if ActionPolicy.cache_store.nil? ||
                           !self.class.cached_rules.key?(rule)
+          @cached = true
 
-          apply_with_cache(rule) { super }
+          apply_with_cache(rule) do
+            @cached = false
+            super
+          end
         end
       end
 

@@ -2,20 +2,6 @@
 
 require "test_helper"
 
-class InMemoryCache
-  attr_accessor :store
-
-  def initialize
-    self.store = {}
-  end
-
-  def fetch(key, **_options)
-    return store[key] if store.key?(key)
-
-    store[key] = yield
-  end
-end
-
 class TestCache < Minitest::Test
   class TestPolicy
     include ActionPolicy::Policy::Core

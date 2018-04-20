@@ -49,6 +49,12 @@ module ActionPolicy # :nodoc:
       app.executor.to_complete { ActionPolicy::PerThreadCache.clear_all }
     end
 
+    initializer "action_policy.instrumentation" do |_app|
+      require "action_policy/rails/policy/instrumentation"
+
+      ActionPolicy::Base.include ActionPolicy::Policy::Rails::Instrumentation
+    end
+
     config.after_initialize do |_app|
       ActiveSupport.on_load(:action_controller) do
         next unless Rails.application.config.action_policy.auto_inject_into_controller
